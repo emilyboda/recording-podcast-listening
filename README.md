@@ -45,7 +45,7 @@ Note that this does not include the date or time that you listened to the podcas
 
 The webplayer also does not give us this information, so I think it safe to assume that this information is not available anywhere.
 <p align="center">
-<img src="https://github.com/emilyboda/recording-podcast-listening/blob/master/webplayer%20listening%20history%20screenshot.PNG" width="900"><img 
+<img src="https://github.com/emilyboda/recording-podcast-listening/blob/master/images/webplayer%20listening%20history%20screenshot.PNG" width="900"><img 
 </p>
 
 # So how does my script determine what day a podcast was listened to?
