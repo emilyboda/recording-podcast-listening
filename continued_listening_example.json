@@ -1,0 +1,71 @@
+[
+            {
+                'dt':'2020-01-01',
+                'episodes': [
+                            {
+                               "uuid": "3",
+                               "playingStatus": 3,
+                               "playedUpTo":50,
+                               "duration":100
+                            },
+                            {
+                               "uuid": "2",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            },
+                            {
+                               "uuid": "1",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            }
+                            ]
+            },
+            {
+                'dt':'2020-01-02',
+                'episodes': [
+                            {
+                               "uuid": "4",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            },
+                            {
+                               "uuid": "3",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            },
+                            {
+                               "uuid": "2",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            }
+                            ]
+            },
+            {
+                'dt':'2020-01-03',
+                'episodes': [
+                            {
+                               "uuid": "5",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            },
+                            {
+                               "uuid": "4",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            },
+                            {
+                               "uuid": "3",
+                               "playingStatus": 3,
+                               "playedUpTo":100,
+                               "duration":100
+                            }
+                            ]
+            }
+    ]
