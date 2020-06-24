@@ -58,7 +58,7 @@ When a podcast moves in the list from one data recording to another, it's almost
 
 I currently decided to let re-listens overwrite old listens because the risk of messing up all the continuing listens is too great. However, I have some ideas of how I would factor in re-listens.
 
-## Days since last listen
+### Days since last listen
 ```
 if days_since_last_listen < X:
   you're continuing to listen to this episode
@@ -66,7 +66,12 @@ elif days_since_last_listen > X:
   I'm going to assume you finished listening last time and you're listening to the episode again now
 ```
 
-## If the playedUpTo number goes _down_ instead of up
+### If the playedUpTo number goes _down_ instead of up
 This could fail in two ways: 
 * if you decided to go back a minute or two during your listening session at the top of the hour (when your script was taking recordings)
 * if the podcast is less than an hour long, you might finish the episode before the hourly data recording can catch that your playedUpTo value was less
+
+## Testing Re-Listening vs. Continued Listening
+I've added an [example history array](https://github.com/emilyboda/recording-podcast-listening/blob/master/continued_listening_example.json) that you can use to test whether your code properly senses re-listening.
+
+It shows that the episode "uuid":3 was 50% done on Jan 1st and then it moved up to 100% done on the date of the next recording, Jan 2nd. The episode "uuid":2 was played to 100% on Jan 1st, and then it was re-listened on Jan 3rd and played to 100% again. The only way that I can tell it was re-listened to is that it moved in the order.
