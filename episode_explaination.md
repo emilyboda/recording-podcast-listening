@@ -24,3 +24,12 @@ Here is the information you can get about one episode from Pocket Casts' Listeni
 Note that this does not include the date or time that you listened to the podcast, only the date and time that it was published.
 
 The webplayer also does not give us this information:
+<p align="center">
+<img src="https://github.com/emilyboda/recording-podcast-listening/blob/master/webplayer%20listening%20history%20screenshot.PNG" width="900"><img 
+</p>
+   
+Thankfully, the array that is returned by the API _is_ in chronological order. Using this order, and by pulling this listening history every hour of the day, I can determine which hour of the day I finished listening to an episode. However, if I finish a 2.5 hour long episode at 1:13 pm, my data will tell me that I listened to 2.5 hours of episodes at 2:00 pm.
+
+While I could correct this by telling my script that I listened to 0.5 hours at 12:00 pm, 1 hr at 1:00 pm, and 1 hr at 2:00 pm, but this is still not very accurate.
+
+I prefer to record the data every hour of the day, and then display my data on a graph by the day.
