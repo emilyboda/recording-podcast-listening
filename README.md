@@ -10,6 +10,7 @@ Since Pocket Casts' Listening History feature does not expose the actual date or
 # TO DO
 * create an authorization script that can run on a failed status_code
 * add export to csv option
+* add notify and notify set-up instructions
 
 # TO DO: Authorization Problem
 I originally created these files using Google App Script. I had no trouble converting get_history to Python, but my authorization file is giving me errors.
