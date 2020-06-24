@@ -74,6 +74,6 @@ This could fail in two ways:
 * if the podcast is less than an hour long, you might finish the episode before the hourly data recording can catch that your playedUpTo value was less
 
 ## Testing Re-Listening vs. Continued Listening
-I've added an [example history array](https://github.com/emilyboda/recording-podcast-listening/blob/master/continued_listening_example.json) that you can use to test whether your code properly senses re-listening.
+I've added an [example history array](https://github.com/emilyboda/recording-podcast-listening/blob/master/examples/continued_listening_example.json) that you can use to test whether your code properly senses re-listening.
 
 It shows that the episode "uuid":3 was 50% done on Jan 1st and then it moved up to 100% done on the date of the next recording, Jan 2nd. The episode "uuid":2 was played to 100% on Jan 1st, and then it was re-listened on Jan 3rd and played to 100% again. The only way that I can tell it was re-listened to is that it moved in the order.
