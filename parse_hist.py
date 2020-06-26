@@ -2,9 +2,12 @@ import json
 import os
 import datetime
 import math
+import upload_to_sheet as gsu
+
+# If modifying these scopes, delete the file token.pickle.
+sheet_id = 'YOUR SHEET ID HERE'
 
 history_file_path = "/home/pi/pocket-casts-hist/history/"
-graph_choice = 'hours' # do you want to view the metrics by date or by hour and date? choose 'hours' or 'days'
 
 def debug_episode(uuid, history):
     for date in history:
@@ -174,8 +177,13 @@ def get_date_metrics(dates, hd):
             dur = 0
             for ep in dates[d]['episodes']:
                 dur = dur + dates[d]['episodes'][ep]['playedUpTo']
-            dobj = datetime.datetime.strptime(d, "%Y-%m-%d %H:%M")
-            metrics[dobj] = {'num of episodes':len(dates[d]['episodes']), 'duration':dur, 'date object':datetime.datetime.strptime(d,"%Y-%m-%d %H:%M")}
+            dobj = datetime.datetime.strptime(datetime.datetime.strptime(d, "%Y-%m-%d %H:%M").strftime("%Y-%m-%d %H"),"%Y-%m-%d %H")
+            print(dobj)
+            if dobj not in metrics:
+                metrics[dobj] = {'num of episodes':len(dates[d]['episodes']), 'duration':dur, 'date object':dobj}
+            else:
+                metrics[dobj]['num of episodes'] = metrics[dobj]['num of episodes'] + len(dates[d]['episodes'])
+                metrics[dobj]['duration'] = metrics[dobj]['duration'] + dur
     elif hd == "days":
         for d in dates:
             dur = 0
@@ -205,12 +213,21 @@ def get_date_metrics(dates, hd):
     """
     return metrics
 
-def format_for_graph(metrics, hd):
+def format_for_graph(metrics, hd,path):
     # this will return three arrays that you can plot the data with
     y_num = []
     y_dur = []
+    file_dates = get_dates_from_files(path)
+    file_dates = sorted(file_dates)
+    firstpull = file_dates[0]
+    lastpull = file_dates[len(file_dates)-1]
     if hd == 'hours':
-        x_dates = get_dates_from_files(history_file_path)
+        x_dates = []
+        while firstpull <= lastpull:
+            x_dates.append(firstpull)
+            firstpull = firstpull + datetime.timedelta(days=1/24)
+        # for x in x_dates:
+            # print(x)
         for x in x_dates:
             try:
                 y_num.append(metrics[x]['num of episodes'])
@@ -228,25 +245,82 @@ def format_for_graph(metrics, hd):
             y_dur.append(round(metrics[x]['duration']/60,1))
     return x_dates, y_num, y_dur
 
+def get_episodes_for_sheets_upload(dates):
+    all_episodes = []
+    for d in dates:
+        for ep in dates[d]['episodes']:
+            ep_data = dates[d]['episodes'][ep]
+            # print(ep_data['title'])
+            this_ep = [
+                        d,
+                        ep_data['title'],
+                        ep_data['podcastTitle'],
+                        ep_data['playedUpTo'],
+                        ep_data['duration'],
+                        ep_data['playingStatus'],
+                        ep_data['isDeleted'],
+                        ep_data['uuid'],
+                        ep_data['podcastUuid'],
+                        ep_data['fileType'],
+                        ep_data['published'],
+                        ep_data['url']
+                    ]
+            all_episodes.append(this_ep)
+    return all_episodes
+    
+def get_by_for_sheets_upload(metrics,hd,path):
+    all_timestamps = []
+    x_dates, y_num, y_dur = format_for_graph(metrics, hd,path)
+    for x in range(len(x_dates)):
+        all_timestamps.append([x_dates[x].strftime("%Y-%m-%d %H:%M"), y_num[x], y_dur[x]])
+    return all_timestamps
+
+def get_hist_file_size(path):
+    total_size = 0
+    file_count = 0
+    for dirpath, dirnames, filenames in os.walk(path):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            # skip if it is symbolic link
+            if not os.path.islink(fp):
+                total_size += os.path.getsize(fp)
+                file_count += 1
+
+    return total_size*.000001,file_count
+
+
 history = get_history_from_files(history_file_path)
 uuids = get_unique_uuids(history)
 print('total episodes found:', len(uuids))
 dates = get_unique_dates(uuids)
 
-metrics = get_date_metrics(dates,graph_choice)
-x_dates, y_num, y_dur = format_for_graph(metrics, graph_choice)
+# initialize
+service = gsu.auth()
+
+# update EpisodeData
+episoderecord = get_episodes_for_sheets_upload(dates)
+gsu.clear_sheet(service, sheet_id, 'EpisodeRecord','L')
+gsu.update_sheet(service, sheet_id, 'EpisodeRecord','L',episoderecord)
+
+# update ByDay
+daily = get_by_for_sheets_upload(get_date_metrics(dates,'days'),'days',history_file_path)
+gsu.clear_sheet(service,sheet_id, 'ByDay', 'C')
+gsu.update_sheet(service, sheet_id, 'ByDay', 'C',daily)
+
+# update UploadRecord
+file_size, file_count = get_hist_file_size(history_file_path)
+now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+record_data = [now_str, len(episoderecord), len(daily), file_size, file_count]
+gsu.append_to_sheet(service,sheet_id,'UploadRecord','E',record_data)
 
 print('')
-print('listening metrics:')
-
-print('date/time stamp      ','\t','# eps','\t','dur(mins)')
-for x in range(len(x_dates)):
-    print(x_dates[x],'\t',y_num[x],'\t',y_dur[x])
-
+print('Go the following URL to see the episode record:')
+print('https://docs.google.com/spreadsheets/d/'+sheet_id+'/')
 print('')
 print('IMPORTANT NOTE:')
 print('Due to a quirk with how podcast listening is recorded, this script is unable')
 print('to determine which episodes were listened to during the first hour of recording.')
+
 """
 NOTES
 
@@ -257,3 +331,4 @@ NOTES
 "podcastUuid": unique id for podcasts
 "uuid": unique id for episode
 """
+
