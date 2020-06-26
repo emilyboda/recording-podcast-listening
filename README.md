@@ -1,8 +1,11 @@
 # Recording your podcast listening using Pocket Casts' Listening History feature
 1. Copy get_history.py to your files
-2. Add your token and filepath to get_history.py.
-3. Set get_history.py to run every hour (or whatever frequency you wish to measure your podcast listening)
-4. Use parse_hist.py to parse the history once you have a few days recorded
+2. Add your pocket casts token and history filepath to get_history.py.
+3. Follow the instructions [here](https://developers.google.com/sheets/api/quickstart/python) to get your credentials.json and token.pickle files.
+4. Copy the credentials.json and token.pickle files to your files.
+5. Add your google spreadsheet id to parse_history.py.
+6. Set get_history.py to run every hour (or whatever frequency you wish to measure your podcast listening)
+7. Use parse_hist.py to parse the history once you have a few days recorded
 
 # Note on the integrity of the data gathered
 Since Pocket Casts' Listening History feature does not expose the actual date or time you listened to an episode, I am using the date and time that your script runs to guess the date that you listened. If your script fails to run, you will only know that you listened to the episode at some point after the last time you recorded and before the next time you recorded. No way around this. Because of this, I use the library "Notify" to alert myself if my script fails so I can (hopefully) fix it within the day.
