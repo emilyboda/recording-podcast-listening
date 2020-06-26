@@ -15,7 +15,7 @@ r = requests.post(url, headers=headers)
 
 if r.status_code == 200:
     print("found ", len(r.json()['episodes']), "episodes")
-    now_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%m")
+    now_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     export_file_path = history_file_path+now_stamp+'.json'
     with open(export_file_path, 'w') as outfile:
         json.dump(r.json(),outfile)
