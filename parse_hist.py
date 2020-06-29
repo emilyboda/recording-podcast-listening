@@ -8,6 +8,7 @@ import upload_to_sheet as gsu
 sheet_id = 'YOUR SHEET ID HERE'
 
 history_file_path = "/home/pi/pocket-casts-hist/history/"
+credentials_file_path = "/home/pi/pocket-casts-hist/"
 
 def debug_episode(uuid, history):
     for date in history:
@@ -295,7 +296,7 @@ print('total episodes found:', len(uuids))
 dates = get_unique_dates(uuids)
 
 # initialize
-service = gsu.auth()
+service = gsu.auth(credentials_file_path)
 
 # update EpisodeData
 episoderecord = get_episodes_for_sheets_upload(dates)
