@@ -20,6 +20,9 @@ I originally created these files using Google App Script. I had no trouble conve
 I've included my [original Google App Script authorization file](docs/authorization.js) for reference.
 My [Python authorization file](docs/authorization.py) attempts to do the same thing, but returns a 500 Internal Server Error.
 
+# TO DO: Investigate Accuracy of Timing
+Taking a look at my records, I think it's possible that the listening history database doesn't update as frequently as I would like. I've never seen it out of date on the website, but, for example, a podcast that I listened to sometimes shows up two or three hours after I think I listened to it. I'm going to investigate to see if the data is delayed and by how much. If it is delayed, it may be because it only pulls the API data every X hours unless the user specifically requests it, and maybe the request is different from the API request for data.
+
 # What information is revealed by the Pocket Casts Listening History API
 Here is all the information that is returned by the Pocket Casts' Listening History API about one episode you listened to.
 
