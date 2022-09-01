@@ -10,19 +10,6 @@
 # Note on the integrity of the data gathered
 Since Pocket Casts' Listening History feature does not expose the actual date or time you listened to an episode, I am using the date and time that your script runs to guess the date that you listened. If your script fails to run, you will only know that you listened to the episode at some point after the last time you recorded and before the next time you recorded. No way around this. Because of this, I use the library "Notify" to alert myself if my script fails so I can (hopefully) fix it within the day.
 
-# TO DO
-* create an authorization script that can run on a failed status_code
-* add export to csv option
-* add notify and notify set-up instructions
-
-# TO DO: Authorization Problem
-I originally created these files using Google App Script. I had no trouble converting get_history to Python, but my authorization file is giving me errors.
-I've included my [original Google App Script authorization file](docs/authorization.js) for reference.
-My [Python authorization file](docs/authorization.py) attempts to do the same thing, but returns a 500 Internal Server Error.
-
-# TO DO: Investigate Accuracy of Timing
-Taking a look at my records, I think it's possible that the listening history database doesn't update as frequently as I would like. I've never seen it out of date on the website, but, for example, a podcast that I listened to sometimes shows up two or three hours after I think I listened to it. I'm going to investigate to see if the data is delayed and by how much. If it is delayed, it may be because it only pulls the API data every X hours unless the user specifically requests it, and maybe the request is different from the API request for data.
-
 # What information is revealed by the Pocket Casts Listening History API
 Here is all the information that is returned by the Pocket Casts' Listening History API about one episode you listened to.
 
@@ -83,3 +70,16 @@ This could fail in two ways:
 I've added an [example history array](https://github.com/emilyboda/recording-podcast-listening/blob/master/examples/continued_listening_example.json) that you can use to test whether your code properly senses re-listening.
 
 It shows that the episode "uuid":3 was 50% done on Jan 1st and then it moved up to 100% done on the date of the next recording, Jan 2nd. The episode "uuid":2 was played to 100% on Jan 1st, and then it was re-listened on Jan 3rd and played to 100% again. The only way that I can tell it was re-listened to is that it moved in the order.
+
+# TO DO
+* create an authorization script that can run on a failed status_code
+* add export to csv option
+* add notify and notify set-up instructions
+
+# TO DO: Authorization Problem
+I originally created these files using Google App Script. I had no trouble converting get_history to Python, but my authorization file is giving me errors.
+I've included my [original Google App Script authorization file](docs/authorization.js) for reference.
+My [Python authorization file](docs/authorization.py) attempts to do the same thing, but returns a 500 Internal Server Error.
+
+# TO DO: Investigate Accuracy of Timing
+Taking a look at my records, I think it's possible that the listening history database doesn't update as frequently as I would like. I've never seen it out of date on the website, but, for example, a podcast that I listened to sometimes shows up two or three hours after I think I listened to it. I'm going to investigate to see if the data is delayed and by how much. If it is delayed, it may be because it only pulls the API data every X hours unless the user specifically requests it, and maybe the request is different from the API request for data.
