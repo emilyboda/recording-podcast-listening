@@ -1,3 +1,8 @@
+# Overview
+The intent of this project was to record what podcasts I listen to so I could create some fun charts. I had previously used a Tasker script on my Android phone to record my listening, but it wasn't very reliable. Around this time, Pocket Casts came out with a Listening History feature on their mobile and web apps. Although their official API documentation did not include any documentation about this newly released feature, I used the documentation for the other API features to figure out how to access this API.
+
+Read on to see instructions on how you can access the API yourself, as well as how I use the Listening History to infer exactly when I listened to that podcast (it's not as straight forward as you would think).
+
 # Recording your podcast listening using Pocket Casts' Listening History feature
 1. Copy get_history.py to your files
 2. Add your pocket casts token and history filepath to get_history.py.
@@ -34,9 +39,9 @@ Here is all the information that is returned by the Pocket Casts' Listening Hist
 }
 ```
 
-Note that this does not include the date or time that you listened to the podcast, only the date and time that it was published.
+Note that this does not include the date or time that you listened to the podcast, only the date and time that the episdoe was published.
 
-The webplayer also does not give us this information, so I think it safe to assume that this information is not available anywhere.
+The webplayer also does not give us this information, so I think it safe to assume that this information is not available via the API.
 <p align="center">
 <img src="https://github.com/emilyboda/recording-podcast-listening/blob/master/images/webplayer%20listening%20history%20screenshot.PNG" width="900"><img 
 </p>
@@ -44,7 +49,7 @@ The webplayer also does not give us this information, so I think it safe to assu
 # So how does my script determine what day a podcast was listened to?
 Thankfully, the array that is returned by the API _is_ in chronological order. Using this order, and by pulling this listening history every hour of the day, I can determine which hour of the day I finished listening to an episode. However, if I finish a 2.5 hour long episode at 1:13 pm, my script will tell me that I listened to 2.5 hours of episodes at 2:00 pm.
 
-While I could correct this by telling my script that I listened to 0.5 hours at 12:00 pm, 1 hr at 1:00 pm, and 1 hr at 2:00 pm, but this is still not very accurate. I prefer to record the data every hour of the day, and then display my data on a graph by the day.
+While I could correct this by telling my script that I listened to 0.5 hours at 12:00 pm, 1 hr at 1:00 pm, and 1 hr at 2:00 pm, but this is still not very accurate. I prefer to record the data every hour of the day, and then display my data on a graph by the day. This method reduces the inaccuracy of the data.
 
 # Determining Re-Listening
 It's also important to note that if I listen to a episode twice, it will purge the old listen and replace it with the new one. 
@@ -67,7 +72,7 @@ This could fail in two ways:
 * if the podcast is less than an hour long, you might finish the episode before the hourly data recording can catch that your playedUpTo value was less
 
 ## Testing Re-Listening vs. Continued Listening
-I've added an [example history array](https://github.com/emilyboda/recording-podcast-listening/blob/master/examples/continued_listening_example.json) that you can use to test whether your code properly senses re-listening.
+If you want to improve on this code and try to figure out how to make it better, I've added an [example history array](https://github.com/emilyboda/recording-podcast-listening/blob/master/examples/continued_listening_example.json) that you can use to test whether your code properly determines re-listening.
 
 It shows that the episode "uuid":3 was 50% done on Jan 1st and then it moved up to 100% done on the date of the next recording, Jan 2nd. The episode "uuid":2 was played to 100% on Jan 1st, and then it was re-listened on Jan 3rd and played to 100% again. The only way that I can tell it was re-listened to is that it moved in the order.
 
@@ -76,10 +81,10 @@ It shows that the episode "uuid":3 was 50% done on Jan 1st and then it moved up 
 * add export to csv option
 * add notify and notify set-up instructions
 
-# TO DO: Authorization Problem
+## Authorization Problem
 I originally created these files using Google App Script. I had no trouble converting get_history to Python, but my authorization file is giving me errors.
 I've included my [original Google App Script authorization file](docs/authorization.js) for reference.
 My [Python authorization file](docs/authorization.py) attempts to do the same thing, but returns a 500 Internal Server Error.
 
-# TO DO: Investigate Accuracy of Timing
+##: Investigate Accuracy of Timing
 Taking a look at my records, I think it's possible that the listening history database doesn't update as frequently as I would like. I've never seen it out of date on the website, but, for example, a podcast that I listened to sometimes shows up two or three hours after I think I listened to it. I'm going to investigate to see if the data is delayed and by how much. If it is delayed, it may be because it only pulls the API data every X hours unless the user specifically requests it, and maybe the request is different from the API request for data.
